@@ -51,19 +51,19 @@ function AuthPage() {
     e.preventDefault();
     if (mode === "forgot") {
       const parsed = z.string().trim().email().safeParse(email);
-      if (!parsed.success) return toast.error("Enter a valid email");
+      if (!parsed.success) { toast.error("Enter a valid email"); return; }
       setBusy(true);
       const { error } = await supabase.auth.resetPasswordForEmail(parsed.data, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
       setSent("reset");
       return;
     }
 
     const parsed = schema.safeParse({ email, password });
-    if (!parsed.success) return toast.error(parsed.error.issues[0]?.message ?? "Invalid details");
+    if (!parsed.success) { toast.error(parsed.error.issues[0]?.message ?? "Invalid details"); return; }
     setBusy(true);
     if (mode === "signup") {
       const { data, error } = await supabase.auth.signUp({
@@ -75,7 +75,7 @@ function AuthPage() {
         },
       });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
       if (!data.session) setSent("confirm");
     } else {
       const { error } = await supabase.auth.signInWithPassword({
@@ -83,7 +83,7 @@ function AuthPage() {
         password: parsed.data.password,
       });
       setBusy(false);
-      if (error) return toast.error(error.message);
+      if (error) { toast.error(error.message); return; }
     }
   }
 
