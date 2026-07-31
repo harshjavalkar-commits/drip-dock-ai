@@ -81,7 +81,6 @@ function Landing() {
             </Link>
             <Link
               to="/auth"
-              search={{ mode: "signup" }}
               className="rounded-full border border-border px-6 py-3 text-sm transition-colors hover:bg-accent"
             >
               Create an account

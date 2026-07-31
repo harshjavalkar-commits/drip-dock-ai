@@ -153,7 +153,7 @@ function Picker({
   return (
     <div className="space-y-2">
       <Label>{label}</Label>
-      <Select value={value || undefined} onValueChange={onChange}>
+      <Select {...(value ? { value } : {})} onValueChange={onChange}>
         <SelectTrigger className="rounded-lg bg-card">
           <SelectValue placeholder={placeholder ?? "Select"} />
         </SelectTrigger>
