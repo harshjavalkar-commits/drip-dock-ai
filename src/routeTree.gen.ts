@@ -14,9 +14,11 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
+import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedDockRouteImport } from './routes/_authenticated/dock'
 import { Route as AuthenticatedStylistRouteImport } from './routes/_authenticated/stylist'
 import { Route as AuthenticatedUploadRouteImport } from './routes/_authenticated/upload'
+import { Route as AuthenticatedWishlistRouteImport } from './routes/_authenticated/wishlist'
 import { Route as AuthenticatedItemItemIdRouteImport } from './routes/_authenticated/item.$itemId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -43,6 +45,11 @@ const AuthenticatedAnalyticsRoute = AuthenticatedAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCalendarRoute = AuthenticatedCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDockRoute = AuthenticatedDockRouteImport.update({
   id: '/dock',
   path: '/dock',
@@ -58,6 +65,11 @@ const AuthenticatedUploadRoute = AuthenticatedUploadRouteImport.update({
   path: '/upload',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedWishlistRoute = AuthenticatedWishlistRouteImport.update({
+  id: '/wishlist',
+  path: '/wishlist',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedItemItemIdRoute = AuthenticatedItemItemIdRouteImport.update({
   id: '/item/$itemId',
   path: '/item/$itemId',
@@ -69,9 +81,11 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
   '/dock': typeof AuthenticatedDockRoute
   '/stylist': typeof AuthenticatedStylistRoute
   '/upload': typeof AuthenticatedUploadRoute
+  '/wishlist': typeof AuthenticatedWishlistRoute
   '/item/$itemId': typeof AuthenticatedItemItemIdRoute
 }
 export interface FileRoutesByTo {
@@ -79,9 +93,11 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/analytics': typeof AuthenticatedAnalyticsRoute
+  '/calendar': typeof AuthenticatedCalendarRoute
   '/dock': typeof AuthenticatedDockRoute
   '/stylist': typeof AuthenticatedStylistRoute
   '/upload': typeof AuthenticatedUploadRoute
+  '/wishlist': typeof AuthenticatedWishlistRoute
   '/item/$itemId': typeof AuthenticatedItemItemIdRoute
 }
 export interface FileRoutesById {
@@ -91,9 +107,11 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
+  '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/dock': typeof AuthenticatedDockRoute
   '/_authenticated/stylist': typeof AuthenticatedStylistRoute
   '/_authenticated/upload': typeof AuthenticatedUploadRoute
+  '/_authenticated/wishlist': typeof AuthenticatedWishlistRoute
   '/_authenticated/item/$itemId': typeof AuthenticatedItemItemIdRoute
 }
 export interface FileRouteTypes {
@@ -103,9 +121,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/analytics'
+    | '/calendar'
     | '/dock'
     | '/stylist'
     | '/upload'
+    | '/wishlist'
     | '/item/$itemId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -113,9 +133,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/analytics'
+    | '/calendar'
     | '/dock'
     | '/stylist'
     | '/upload'
+    | '/wishlist'
     | '/item/$itemId'
   id:
     | '__root__'
@@ -124,9 +146,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/analytics'
+    | '/_authenticated/calendar'
     | '/_authenticated/dock'
     | '/_authenticated/stylist'
     | '/_authenticated/upload'
+    | '/_authenticated/wishlist'
     | '/_authenticated/item/$itemId'
   fileRoutesById: FileRoutesById
 }
@@ -174,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalyticsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/calendar': {
+      id: '/_authenticated/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof AuthenticatedCalendarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dock': {
       id: '/_authenticated/dock'
       path: '/dock'
@@ -195,6 +226,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUploadRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/wishlist': {
+      id: '/_authenticated/wishlist'
+      path: '/wishlist'
+      fullPath: '/wishlist'
+      preLoaderRoute: typeof AuthenticatedWishlistRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/item/$itemId': {
       id: '/_authenticated/item/$itemId'
       path: '/item/$itemId'
@@ -207,17 +245,21 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
+  AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
   AuthenticatedDockRoute: typeof AuthenticatedDockRoute
   AuthenticatedStylistRoute: typeof AuthenticatedStylistRoute
   AuthenticatedUploadRoute: typeof AuthenticatedUploadRoute
+  AuthenticatedWishlistRoute: typeof AuthenticatedWishlistRoute
   AuthenticatedItemItemIdRoute: typeof AuthenticatedItemItemIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
+  AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
   AuthenticatedDockRoute: AuthenticatedDockRoute,
   AuthenticatedStylistRoute: AuthenticatedStylistRoute,
   AuthenticatedUploadRoute: AuthenticatedUploadRoute,
+  AuthenticatedWishlistRoute: AuthenticatedWishlistRoute,
   AuthenticatedItemItemIdRoute: AuthenticatedItemItemIdRoute,
 }
 
