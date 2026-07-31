@@ -16,6 +16,8 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedDockRouteImport } from './routes/_authenticated/dock'
+import { Route as AuthenticatedPackingRouteImport } from './routes/_authenticated/packing'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedStylistRouteImport } from './routes/_authenticated/stylist'
 import { Route as AuthenticatedUploadRouteImport } from './routes/_authenticated/upload'
 import { Route as AuthenticatedWishlistRouteImport } from './routes/_authenticated/wishlist'
@@ -55,6 +57,16 @@ const AuthenticatedDockRoute = AuthenticatedDockRouteImport.update({
   path: '/dock',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPackingRoute = AuthenticatedPackingRouteImport.update({
+  id: '/packing',
+  path: '/packing',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedStylistRoute = AuthenticatedStylistRouteImport.update({
   id: '/stylist',
   path: '/stylist',
@@ -83,6 +95,8 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dock': typeof AuthenticatedDockRoute
+  '/packing': typeof AuthenticatedPackingRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/stylist': typeof AuthenticatedStylistRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/wishlist': typeof AuthenticatedWishlistRoute
@@ -95,6 +109,8 @@ export interface FileRoutesByTo {
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dock': typeof AuthenticatedDockRoute
+  '/packing': typeof AuthenticatedPackingRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/stylist': typeof AuthenticatedStylistRoute
   '/upload': typeof AuthenticatedUploadRoute
   '/wishlist': typeof AuthenticatedWishlistRoute
@@ -109,6 +125,8 @@ export interface FileRoutesById {
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
   '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/dock': typeof AuthenticatedDockRoute
+  '/_authenticated/packing': typeof AuthenticatedPackingRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/stylist': typeof AuthenticatedStylistRoute
   '/_authenticated/upload': typeof AuthenticatedUploadRoute
   '/_authenticated/wishlist': typeof AuthenticatedWishlistRoute
@@ -123,6 +141,8 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/calendar'
     | '/dock'
+    | '/packing'
+    | '/profile'
     | '/stylist'
     | '/upload'
     | '/wishlist'
@@ -135,6 +155,8 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/calendar'
     | '/dock'
+    | '/packing'
+    | '/profile'
     | '/stylist'
     | '/upload'
     | '/wishlist'
@@ -148,6 +170,8 @@ export interface FileRouteTypes {
     | '/_authenticated/analytics'
     | '/_authenticated/calendar'
     | '/_authenticated/dock'
+    | '/_authenticated/packing'
+    | '/_authenticated/profile'
     | '/_authenticated/stylist'
     | '/_authenticated/upload'
     | '/_authenticated/wishlist'
@@ -212,6 +236,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDockRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/packing': {
+      id: '/_authenticated/packing'
+      path: '/packing'
+      fullPath: '/packing'
+      preLoaderRoute: typeof AuthenticatedPackingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/stylist': {
       id: '/_authenticated/stylist'
       path: '/stylist'
@@ -247,6 +285,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
   AuthenticatedDockRoute: typeof AuthenticatedDockRoute
+  AuthenticatedPackingRoute: typeof AuthenticatedPackingRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedStylistRoute: typeof AuthenticatedStylistRoute
   AuthenticatedUploadRoute: typeof AuthenticatedUploadRoute
   AuthenticatedWishlistRoute: typeof AuthenticatedWishlistRoute
@@ -257,6 +297,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
   AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
   AuthenticatedDockRoute: AuthenticatedDockRoute,
+  AuthenticatedPackingRoute: AuthenticatedPackingRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedStylistRoute: AuthenticatedStylistRoute,
   AuthenticatedUploadRoute: AuthenticatedUploadRoute,
   AuthenticatedWishlistRoute: AuthenticatedWishlistRoute,
