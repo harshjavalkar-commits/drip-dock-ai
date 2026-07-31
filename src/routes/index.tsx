@@ -10,10 +10,10 @@ export const Route = createFileRoute("/")({
         content:
           "DripDock turns the clothes you already own into outfits worth wearing. Catalogue your wardrobe, get AI styling, track cost per wear, plan outfits and pack smarter.",
       },
-      { property: "og:title", content: "DripDock — AI wardrobe intelligence" },
+      { property: "og:title", content: "DripDock — AI wardrobe intelligence & personal stylist" },
       {
         property: "og:description",
-        content: "Dress better using the clothes you already own.",
+        content: "DripDock turns the clothes you already own into outfits worth wearing. Catalogue your wardrobe, get AI styling, track cost per wear, plan outfits and pack smarter.",
       },
     ],
   }),
