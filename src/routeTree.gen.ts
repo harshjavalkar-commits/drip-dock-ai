@@ -14,6 +14,8 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedDockRouteImport } from './routes/_authenticated/dock'
+import { Route as AuthenticatedUploadRouteImport } from './routes/_authenticated/upload'
+import { Route as AuthenticatedItemItemIdRouteImport } from './routes/_authenticated/item.$itemId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -39,18 +41,32 @@ const AuthenticatedDockRoute = AuthenticatedDockRouteImport.update({
   path: '/dock',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedUploadRoute = AuthenticatedUploadRouteImport.update({
+  id: '/upload',
+  path: '/upload',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedItemItemIdRoute = AuthenticatedItemItemIdRouteImport.update({
+  id: '/item/$itemId',
+  path: '/item/$itemId',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dock': typeof AuthenticatedDockRoute
+  '/upload': typeof AuthenticatedUploadRoute
+  '/item/$itemId': typeof AuthenticatedItemItemIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dock': typeof AuthenticatedDockRoute
+  '/upload': typeof AuthenticatedUploadRoute
+  '/item/$itemId': typeof AuthenticatedItemItemIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -59,12 +75,15 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/dock': typeof AuthenticatedDockRoute
+  '/_authenticated/upload': typeof AuthenticatedUploadRoute
+  '/_authenticated/item/$itemId': typeof AuthenticatedItemItemIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/reset-password' | '/dock'
+  fullPaths:
+    '/' | '/auth' | '/reset-password' | '/dock' | '/upload' | '/item/$itemId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/reset-password' | '/dock'
+  to: '/' | '/auth' | '/reset-password' | '/dock' | '/upload' | '/item/$itemId'
   id:
     | '__root__'
     | '/'
@@ -72,6 +91,8 @@ export interface FileRouteTypes {
     | '/auth'
     | '/reset-password'
     | '/_authenticated/dock'
+    | '/_authenticated/upload'
+    | '/_authenticated/item/$itemId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,15 +139,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDockRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/upload': {
+      id: '/_authenticated/upload'
+      path: '/upload'
+      fullPath: '/upload'
+      preLoaderRoute: typeof AuthenticatedUploadRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/item/$itemId': {
+      id: '/_authenticated/item/$itemId'
+      path: '/item/$itemId'
+      fullPath: '/item/$itemId'
+      preLoaderRoute: typeof AuthenticatedItemItemIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDockRoute: typeof AuthenticatedDockRoute
+  AuthenticatedUploadRoute: typeof AuthenticatedUploadRoute
+  AuthenticatedItemItemIdRoute: typeof AuthenticatedItemItemIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDockRoute: AuthenticatedDockRoute,
+  AuthenticatedUploadRoute: AuthenticatedUploadRoute,
+  AuthenticatedItemItemIdRoute: AuthenticatedItemItemIdRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
