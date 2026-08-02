@@ -4,7 +4,6 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -87,17 +86,6 @@ function AuthPage() {
     }
   }
 
-  async function google() {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) {
-      toast.error("Google sign-in failed");
-      return;
-    }
-    if (result.redirected) return;
-    navigate({ to: "/dock", replace: true });
-  }
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -180,24 +168,7 @@ function AuthPage() {
             </form>
           )}
 
-          {mode !== "forgot" && !sent ? (
-            <>
-              <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
-                <span className="h-px flex-1 bg-border" />
-                or
-                <span className="h-px flex-1 bg-border" />
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="lg"
-                onClick={google}
-                className="w-full rounded-full bg-card"
-              >
-                Continue with Google
-              </Button>
-            </>
-          ) : null}
+
 
           <div className="mt-8 space-y-2 text-sm text-muted-foreground">
             {mode !== "signup" ? (
