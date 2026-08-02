@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { requireDripDockAuth } from "@/lib/supabase-auth-middleware";
 
 const OutfitInput = z.object({ occasion: z.string().min(1).max(60), notes: z.string().max(300).optional() });
 const PackingInput = z.object({
@@ -23,7 +23,7 @@ export type GeneratedPacking = {
 };
 
 export const generateOutfits = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireDripDockAuth])
   .inputValidator((input: unknown) => OutfitInput.parse(input))
   .handler(async ({ data, context }): Promise<GeneratedOutfit[]> => {
     const { callLovableAi, extractJson } = await import("@/lib/ai.server");
@@ -61,7 +61,7 @@ export const generateOutfits = createServerFn({ method: "POST" })
   });
 
 export const generatePacking = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([requireDripDockAuth])
   .inputValidator((input: unknown) => PackingInput.parse(input))
   .handler(async ({ data, context }): Promise<GeneratedPacking> => {
     const { callLovableAi, extractJson } = await import("@/lib/ai.server");
