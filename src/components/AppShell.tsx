@@ -12,7 +12,7 @@ import {
   LogOut,
 } from "lucide-react";
 import type { ReactNode } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
 export const NAV = [
