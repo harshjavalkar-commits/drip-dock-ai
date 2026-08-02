@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Shirt } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
 export function useSignedUrl(path: string | null | undefined) {
