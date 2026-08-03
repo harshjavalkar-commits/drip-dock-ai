@@ -72,6 +72,13 @@ function Dock() {
   const [brand, setBrand] = useState<string | null>(null);
   const [favOnly, setFavOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  // Play the closet-door reveal once per browser session.
+  const [showDoors] = useState(() => {
+    if (typeof window === "undefined") return false;
+    if (window.sessionStorage.getItem("dripdock:doors") === "1") return false;
+    window.sessionStorage.setItem("dripdock:doors", "1");
+    return true;
+  });
 
   const options = useMemo(
     () => ({
