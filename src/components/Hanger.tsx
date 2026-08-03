@@ -1,11 +1,14 @@
+import type React from "react";
+
 /** Empty hanger illustration — decorative only. */
-export function Hanger({ className }: { className?: string }) {
+export function Hanger({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
     <svg
       viewBox="0 0 120 80"
       fill="none"
       aria-hidden="true"
       className={className}
+      style={style}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
