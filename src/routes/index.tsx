@@ -45,7 +45,7 @@ const FEATURES = [
 
 function Landing() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="room min-h-screen">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <span className="display text-xl">DripDock</span>
         <Link
@@ -56,7 +56,7 @@ function Landing() {
         </Link>
       </header>
 
-      <section className="mx-auto max-w-6xl px-6 pb-20 pt-10 sm:pt-20">
+      <section className="spotlight mx-auto max-w-6xl px-6 pb-20 pt-10 sm:pt-20">
         <div className="rise max-w-3xl">
           <span className="eyebrow">Wardrobe intelligence</span>
           <h1 className="mt-5 text-5xl leading-[1.02] sm:text-7xl">
@@ -88,16 +88,28 @@ function Landing() {
           </div>
         </div>
 
-        <div className="mt-20 grid gap-4 sm:grid-cols-2">
-          {FEATURES.map((feature) => (
-            <article key={feature.title} className="surface p-7">
-              <feature.icon className="h-5 w-5 text-clay" strokeWidth={1.5} />
-              <h2 className="mt-5 text-2xl">{feature.title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{feature.body}</p>
-            </article>
-          ))}
+        <div className="rail-slide mt-20" style={{ animationDelay: "180ms" }}>
+          <div className="flex items-center gap-1.5">
+            <span className="rail-cap" />
+            <span className="rail flex-1" />
+            <span className="rail-cap" />
+          </div>
+          <div className="grid gap-4 pt-6 sm:grid-cols-2">
+            {FEATURES.map((feature, i) => (
+              <article
+                key={feature.title}
+                className="hang surface p-7 transition-all duration-500 hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]"
+                style={{ transform: `rotate(${(i % 2 ? 1 : -1) * 0.25}deg)` }}
+              >
+                <feature.icon className="h-5 w-5 text-walnut" strokeWidth={1.5} />
+                <h2 className="mt-5 text-2xl">{feature.title}</h2>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{feature.body}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
+
 
       <footer className="border-t border-border">
         <div className="mx-auto max-w-6xl px-6 py-8 text-xs text-muted-foreground">
