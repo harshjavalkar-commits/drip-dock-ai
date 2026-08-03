@@ -126,7 +126,9 @@ function Dock() {
 
   return (
     <>
+      {showDoors ? <WardrobeDoors /> : null}
       <PageHeader
+
         eyebrow={`${items.length} ${items.length === 1 ? "piece" : "pieces"}`}
         title="The Dock"
         description="Everything you own, catalogued and searchable."
