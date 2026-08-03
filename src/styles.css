@@ -37,6 +37,12 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-clay: var(--clay);
   --color-clay-foreground: var(--clay-foreground);
+  --color-walnut: var(--walnut);
+  --color-walnut-deep: var(--walnut-deep);
+  --color-walnut-foreground: var(--walnut-foreground);
+  --color-brass: var(--brass);
+  --color-ivory: var(--ivory);
+
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -59,14 +65,21 @@
 
   --shadow-soft: 0 1px 2px oklch(0.2 0.02 70 / 0.04), 0 8px 24px oklch(0.2 0.02 70 / 0.06);
   --shadow-lift: 0 2px 4px oklch(0.2 0.02 70 / 0.05), 0 18px 48px oklch(0.2 0.02 70 / 0.1);
+  --shadow-rail: 0 1px 0 oklch(1 0 0 / 0.5) inset, 0 10px 22px -12px oklch(0.32 0.06 55 / 0.55);
 }
 
 :root {
   --radius: 1rem;
-  --background: oklch(0.983 0.005 85);
+  --ivory: oklch(0.968 0.014 88);
+  --background: oklch(0.968 0.014 88);
   --foreground: oklch(0.21 0.012 60);
-  --card: oklch(1 0 0);
+  --walnut: oklch(0.46 0.062 52);
+  --walnut-deep: oklch(0.33 0.05 48);
+  --walnut-foreground: oklch(0.972 0.012 88);
+  --brass: oklch(0.74 0.086 78);
+  --card: oklch(0.992 0.008 88);
   --card-foreground: oklch(0.21 0.012 60);
+
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.21 0.012 60);
   --primary: oklch(0.24 0.014 60);
@@ -100,7 +113,13 @@
 }
 
 .dark {
+  --ivory: oklch(0.22 0.014 60);
+  --walnut: oklch(0.55 0.07 52);
+  --walnut-deep: oklch(0.4 0.055 48);
+  --walnut-foreground: oklch(0.96 0.01 88);
+  --brass: oklch(0.78 0.09 78);
   --background: oklch(0.17 0.008 60);
+
   --foreground: oklch(0.95 0.005 85);
   --card: oklch(0.216 0.009 60);
   --card-foreground: oklch(0.95 0.005 85);
@@ -193,5 +212,150 @@
   to {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* ── Walk-in wardrobe atmosphere ─────────────────────────────── */
+
+@utility room {
+  background-color: var(--color-ivory);
+  background-image:
+    radial-gradient(120% 70% at 50% -10%, oklch(1 0 0 / 0.9), transparent 60%),
+    radial-gradient(80% 50% at 50% 110%, oklch(0.45 0.05 55 / 0.08), transparent 70%);
+}
+
+@utility spotlight {
+  position: relative;
+  isolation: isolate;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 90%;
+    z-index: -1;
+    pointer-events: none;
+    background: radial-gradient(
+      55% 65% at 50% 0%,
+      oklch(1 0 0 / 0.85),
+      oklch(0.9 0.03 80 / 0.18) 45%,
+      transparent 72%
+    );
+    filter: blur(4px);
+  }
+}
+
+@utility rail {
+  position: relative;
+  border-radius: 999px;
+  height: 7px;
+  background: linear-gradient(
+    to bottom,
+    oklch(0.7 0.05 60),
+    var(--color-walnut) 45%,
+    var(--color-walnut-deep)
+  );
+  box-shadow: var(--shadow-rail);
+}
+
+@utility rail-cap {
+  height: 18px;
+  width: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to bottom, var(--color-walnut), var(--color-walnut-deep));
+  box-shadow: 0 2px 6px -2px oklch(0.3 0.05 50 / 0.6);
+}
+
+@utility hang {
+  transform-origin: 50% -28px;
+  transition:
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s ease;
+  &:hover {
+    animation: sway 2.6s ease-in-out infinite;
+  }
+}
+
+@utility door-panel {
+  background:
+    linear-gradient(115deg, oklch(1 0 0 / 0.1), transparent 40%),
+    repeating-linear-gradient(
+      90deg,
+      var(--color-walnut) 0 12px,
+      var(--color-walnut-deep) 12px 15px,
+      var(--color-walnut) 15px 30px
+    );
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-0.7deg);
+  }
+  50% {
+    transform: rotate(0.7deg);
+  }
+}
+
+@keyframes door-left {
+  0% {
+    transform: perspective(1600px) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(1600px) rotateY(-105deg);
+  }
+}
+
+@keyframes door-right {
+  0% {
+    transform: perspective(1600px) rotateY(0deg);
+  }
+  100% {
+    transform: perspective(1600px) rotateY(105deg);
+  }
+}
+
+@keyframes glow-in {
+  0% {
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@utility door-l {
+  transform-origin: left center;
+  animation: door-left 1.15s cubic-bezier(0.65, 0, 0.2, 1) 0.55s both;
+}
+
+@utility rail-slide {
+  animation: rail-slide 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes rail-slide {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) rotate(-1.5deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility door-r {
+  transform-origin: right center;
+  animation: door-right 1.15s cubic-bezier(0.65, 0, 0.2, 1) 0.55s both;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
   }
 }
