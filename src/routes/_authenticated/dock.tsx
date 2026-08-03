@@ -96,6 +96,20 @@ function Dock() {
     });
   }, [items, query, category, color, brand, favOnly]);
 
+  // Group the visible pieces onto rails, one rail per category.
+  const rails = useMemo(() => {
+    const map = new Map<string, ClothingItem[]>();
+    for (const item of filtered) {
+      const key = item.category || "Unsorted";
+      const bucket = map.get(key);
+      if (bucket) bucket.push(item);
+      else map.set(key, [item]);
+    }
+    return [...map.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  }, [filtered]);
+
+
+
   const toggleFavorite = useMutation({
     mutationFn: async (item: ClothingItem) => {
       const { error } = await supabase
