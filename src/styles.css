@@ -37,6 +37,12 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-clay: var(--clay);
   --color-clay-foreground: var(--clay-foreground);
+  --color-walnut: var(--walnut);
+  --color-walnut-deep: var(--walnut-deep);
+  --color-walnut-foreground: var(--walnut-foreground);
+  --color-brass: var(--brass);
+  --color-ivory: var(--ivory);
+
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
