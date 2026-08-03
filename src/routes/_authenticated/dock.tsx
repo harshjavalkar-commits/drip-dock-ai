@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Heart, Plus, Search, SlidersHorizontal, X } from "lucide-react";
@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { useItems } from "@/lib/queries";
 import { ItemImage } from "@/components/ItemImage";
 import { EmptyHangers } from "@/components/Hanger";
+import { WardrobeDoors } from "@/components/WardrobeDoors";
 import { PageHeader } from "@/components/AppShell";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -73,12 +74,12 @@ function Dock() {
   const [favOnly, setFavOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   // Play the closet-door reveal once per browser session.
-  const [showDoors] = useState(() => {
-    if (typeof window === "undefined") return false;
-    if (window.sessionStorage.getItem("dripdock:doors") === "1") return false;
+  const [showDoors, setShowDoors] = useState(false);
+  useEffect(() => {
+    if (window.sessionStorage.getItem("dripdock:doors") === "1") return;
     window.sessionStorage.setItem("dripdock:doors", "1");
-    return true;
-  });
+    setShowDoors(true);
+  }, []);
 
   const options = useMemo(
     () => ({
