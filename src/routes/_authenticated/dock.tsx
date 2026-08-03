@@ -185,62 +185,94 @@ function Dock() {
       ) : null}
 
       {isLoading ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="aspect-[3/4] animate-pulse rounded-xl bg-muted" />
-          ))}
+        <div className="flex flex-col items-center gap-6 py-24">
+          <EmptyHangers count={5} />
+          <p className="eyebrow animate-pulse">Opening Wardrobe…</p>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="surface flex flex-col items-center justify-center gap-3 px-6 py-20 text-center">
-          <h2 className="text-2xl">{items.length ? "Nothing matches" : "Your dock is empty"}</h2>
+        <div className="spotlight flex flex-col items-center justify-center gap-5 rounded-3xl border border-border bg-card/70 px-6 py-20 text-center">
+          <EmptyHangers count={4} />
+          <h2 className="mt-2 text-3xl">
+            {items.length ? "Nothing on these rails" : "Your wardrobe awaits"}
+          </h2>
           <p className="max-w-sm text-sm text-muted-foreground">
             {items.length
               ? "Try a different search or clear your filters."
-              : "Add your first piece and the stylist starts working immediately."}
+              : "Hang your first piece and the stylist starts working immediately."}
           </p>
           {items.length === 0 ? (
-            <Button asChild className="mt-2 rounded-full">
-              <Link to="/upload">Add your first piece</Link>
+            <Button asChild className="mt-1 rounded-full">
+              <Link to="/upload">Hang your first piece</Link>
             </Button>
           ) : null}
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {filtered.map((item) => (
-            <article key={item.id} className="group relative">
-              <Link
-                to="/item/$itemId"
-                params={{ itemId: item.id }}
-                className="block overflow-hidden rounded-xl border border-border bg-card shadow-[var(--shadow-soft)] transition-shadow hover:shadow-[var(--shadow-lift)]"
-              >
-                <ItemImage path={item.image_url} alt={item.name} className="aspect-[3/4]" />
-                <div className="p-3">
-                  <p className="truncate text-sm font-medium">{item.name}</p>
-                  <p className="mt-0.5 truncate text-xs text-muted-foreground">
-                    {[item.brand, item.category].filter(Boolean).join(" · ")}
-                  </p>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {currency(item.purchase_price)} · worn {item.wear_count}×
-                  </p>
+        <div className="space-y-14">
+          {rails.map(([railName, railItems], railIndex) => (
+            <section
+              key={railName}
+              className="rail-slide spotlight"
+              style={{ animationDelay: `${railIndex * 90}ms` }}
+            >
+              <div className="mb-1 flex items-baseline justify-between gap-4">
+                <h2 className="text-xl">{railName}</h2>
+                <span className="eyebrow">
+                  {railItems.length} {railItems.length === 1 ? "piece" : "pieces"}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1.5">
+                <span className="rail-cap" />
+                <span className="rail flex-1" />
+                <span className="rail-cap" />
+              </div>
+
+              <div className="-mx-5 overflow-x-auto px-5 pb-3 sm:-mx-8 sm:px-8 lg:mx-0 lg:overflow-visible lg:px-0">
+                <div className="flex gap-5 pt-5 lg:grid lg:grid-cols-4">
+                  {railItems.map((item) => (
+                    <article key={item.id} className="hang group relative w-44 shrink-0 lg:w-auto">
+                      <Link
+                        to="/item/$itemId"
+                        params={{ itemId: item.id }}
+                        className="block overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]"
+                      >
+                        <ItemImage
+                          path={item.image_url}
+                          alt={item.name}
+                          className="aspect-[3/4.4] transition-transform duration-700 group-hover:scale-[1.03]"
+                        />
+                        <div className="p-3.5">
+                          <p className="truncate text-sm font-medium">{item.name}</p>
+                          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                            {[item.brand, item.category].filter(Boolean).join(" · ")}
+                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            {currency(item.purchase_price)} · worn {item.wear_count}×
+                          </p>
+                        </div>
+                      </Link>
+                      <button
+                        onClick={() => toggleFavorite.mutate(item)}
+                        aria-label="Toggle favorite"
+                        className="absolute right-2.5 top-2.5 grid h-8 w-8 place-items-center rounded-full bg-background/85 backdrop-blur transition-colors hover:bg-background"
+                      >
+                        <Heart
+                          className={cn(
+                            "h-4 w-4",
+                            item.favorite ? "fill-clay text-clay" : "text-muted-foreground",
+                          )}
+                          strokeWidth={1.5}
+                        />
+                      </button>
+                    </article>
+                  ))}
                 </div>
-              </Link>
-              <button
-                onClick={() => toggleFavorite.mutate(item)}
-                aria-label="Toggle favorite"
-                className="absolute right-2.5 top-2.5 grid h-8 w-8 place-items-center rounded-full bg-background/85 backdrop-blur transition-colors hover:bg-background"
-              >
-                <Heart
-                  className={cn(
-                    "h-4 w-4",
-                    item.favorite ? "fill-clay text-clay" : "text-muted-foreground",
-                  )}
-                  strokeWidth={1.5}
-                />
-              </button>
-            </article>
+              </div>
+            </section>
           ))}
         </div>
       )}
     </>
   );
 }
+
