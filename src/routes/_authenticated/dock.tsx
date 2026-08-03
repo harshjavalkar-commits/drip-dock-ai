@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { useItems } from "@/lib/queries";
 import { ItemImage } from "@/components/ItemImage";
+import { EmptyHangers } from "@/components/Hanger";
 import { PageHeader } from "@/components/AppShell";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
