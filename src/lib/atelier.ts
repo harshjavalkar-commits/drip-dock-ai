@@ -230,7 +230,7 @@ function refineGarment(cutout: HTMLCanvasElement, intensity = 1): HTMLCanvasElem
   ctx.save();
   ctx.filter = "blur(26px)";
   ctx.globalAlpha = 0.22;
-  ctx.fillStyle = "#4a3career".slice(0, 7);
+  ctx.fillStyle = "#4a3a2c";
   ctx.beginPath();
   ctx.ellipse(SIZE_W / 2, dy + dh * 0.99, dw * 0.34, dh * 0.035, 0, 0, Math.PI * 2);
   ctx.fill();
