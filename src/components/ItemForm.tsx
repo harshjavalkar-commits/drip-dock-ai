@@ -1,7 +1,4 @@
-import { useState } from "react";
-import { Loader2, Upload as UploadIcon, X } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,7 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useSignedUrl } from "@/components/ItemImage";
+import { AtelierStudio } from "@/components/AtelierStudio";
+import { emptyAtelier, type AtelierImages } from "@/lib/atelier";
 import { cn } from "@/lib/utils";
 import {
   CATEGORIES,
@@ -27,9 +25,8 @@ import {
   type ClothingItem,
 } from "@/lib/wardrobe";
 
-export type ItemFormValues = {
+export type ItemFormValues = AtelierImages & {
   name: string;
-  image_url: string | null;
   category: string;
   brand: string;
   color: string;
@@ -46,8 +43,8 @@ export type ItemFormValues = {
 
 export function emptyItem(): ItemFormValues {
   return {
+    ...emptyAtelier(),
     name: "",
-    image_url: null,
     category: "T-Shirts",
     brand: "",
     color: "",
@@ -67,6 +64,12 @@ export function toFormValues(item: ClothingItem): ItemFormValues {
   return {
     name: item.name,
     image_url: item.image_url,
+    original_image_url: item.original_image_url ?? item.image_url,
+    extracted_image_url: item.extracted_image_url ?? null,
+    refined_image_url: item.refined_image_url ?? null,
+    image_processing_status: item.image_processing_status ?? "idle",
+    image_processing_stage: item.image_processing_stage ?? null,
+    image_processed_at: item.image_processed_at ?? null,
     category: item.category,
     brand: item.brand ?? "",
     color: item.color ?? "",
@@ -87,6 +90,12 @@ export function toPayload(values: ItemFormValues, userId: string) {
     user_id: userId,
     name: values.name.trim(),
     image_url: values.image_url,
+    original_image_url: values.original_image_url,
+    extracted_image_url: values.extracted_image_url,
+    refined_image_url: values.refined_image_url,
+    image_processing_status: values.image_processing_status,
+    image_processing_stage: values.image_processing_stage,
+    image_processed_at: values.image_processed_at,
     category: values.category,
     brand: values.brand.trim() || null,
     color: values.color || null,
@@ -184,30 +193,8 @@ export function ItemForm({
   submitLabel: string;
   userId: string;
 }) {
-  const [uploading, setUploading] = useState(false);
-  const { data: previewUrl } = useSignedUrl(values.image_url);
   const set = <K extends keyof ItemFormValues>(key: K, v: ItemFormValues[K]) =>
     onChange({ ...values, [key]: v });
-
-  async function handleFile(file: File) {
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("Image must be under 10MB");
-      return;
-    }
-    setUploading(true);
-    const ext = file.name.split(".").pop() ?? "jpg";
-    const path = `${userId}/${crypto.randomUUID()}.${ext}`;
-    const { error } = await supabase.storage.from("wardrobe").upload(path, file, {
-      cacheControl: "3600",
-      upsert: false,
-    });
-    setUploading(false);
-    if (error) {
-      toast.error("Upload failed", { description: error.message });
-      return;
-    }
-    set("image_url", path);
-  }
 
   return (
     <form
@@ -221,53 +208,19 @@ export function ItemForm({
       }}
       className="space-y-8"
     >
-      <div className="surface overflow-hidden p-5 sm:p-6">
-        <span className="eyebrow">Photo</span>
-        <div className="mt-4 grid gap-5 sm:grid-cols-[200px_minmax(0,1fr)]">
-          <div className="relative aspect-[3/4] overflow-hidden rounded-xl border border-dashed border-border bg-muted">
-            {previewUrl ? (
-              <>
-                <img src={previewUrl} alt="Item preview" className="h-full w-full object-cover" />
-                <button
-                  type="button"
-                  onClick={() => set("image_url", null)}
-                  className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-background/90 text-foreground shadow-sm"
-                  aria-label="Remove photo"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </>
-            ) : (
-              <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-muted-foreground">
-                {uploading ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  <UploadIcon className="h-5 w-5" strokeWidth={1.5} />
-                )}
-                <span className="text-xs">{uploading ? "Uploading…" : "No photo yet"}</span>
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col justify-center gap-3">
-            <p className="text-sm text-muted-foreground">
-              A clean photo on a plain background helps the stylist read colour and texture.
-            </p>
-            <label className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm transition-colors hover:bg-accent">
-              <UploadIcon className="h-4 w-4" strokeWidth={1.5} />
-              {values.image_url ? "Replace photo" : "Choose photo"}
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) void handleFile(file);
-                }}
-              />
-            </label>
-          </div>
-        </div>
-      </div>
+      <AtelierStudio
+        images={{
+          image_url: values.image_url,
+          original_image_url: values.original_image_url,
+          extracted_image_url: values.extracted_image_url,
+          refined_image_url: values.refined_image_url,
+          image_processing_status: values.image_processing_status,
+          image_processing_stage: values.image_processing_stage,
+          image_processed_at: values.image_processed_at,
+        }}
+        onChange={(next) => onChange({ ...values, ...next })}
+        userId={userId}
+      />
 
       <div className="surface p-5 sm:p-6">
         <span className="eyebrow">Details</span>
@@ -382,7 +335,7 @@ export function ItemForm({
         </div>
       </div>
 
-      <Button type="submit" size="lg" disabled={submitting || uploading} className="w-full rounded-full sm:w-auto">
+      <Button type="submit" size="lg" disabled={submitting || values.image_processing_status === "processing"} className="w-full rounded-full sm:w-auto">
         {submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
         {submitLabel}
       </Button>

@@ -1,3 +1,5 @@
+import type { ProcessingStage, ProcessingStatus } from "@/lib/atelier";
+
 export const CATEGORIES = [
   "T-Shirts",
   "Shirts",
@@ -148,6 +150,12 @@ export type ClothingItem = {
   user_id: string;
   name: string;
   image_url: string | null;
+  original_image_url: string | null;
+  extracted_image_url: string | null;
+  refined_image_url: string | null;
+  image_processing_status: ProcessingStatus | null;
+  image_processing_stage: ProcessingStage | null;
+  image_processed_at: string | null;
   category: string;
   brand: string | null;
   color: string | null;
