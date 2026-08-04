@@ -28,7 +28,7 @@ function UploadPage() {
   const save = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error("Not signed in");
-      const { error } = await supabase.from("clothing_items").insert(toPayload(values, user.id));
+      const { error } = await supabase.from("clothing_items").insert(toPayload(values, user.id) as never);
       if (error) throw error;
     },
     onSuccess: () => {
