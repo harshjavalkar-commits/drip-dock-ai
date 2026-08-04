@@ -66,7 +66,7 @@ function ItemDetail() {
     mutationFn: async () => {
       if (!user || !values) throw new Error("Missing data");
       const { user_id: _ignored, ...payload } = toPayload(values, user.id);
-      const { error } = await supabase.from("clothing_items").update(payload).eq("id", itemId);
+      const { error } = await supabase.from("clothing_items").update(payload as never).eq("id", itemId);
       if (error) throw error;
     },
     onSuccess: () => {
