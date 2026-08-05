@@ -10,7 +10,6 @@ import {
   REFINEMENT_LABELS,
   emptyAtelier,
   refineAgain,
-  uploadRefinedManually,
   runAtelierPipeline,
   type AtelierImages,
   type ProcessingStage,
@@ -237,7 +236,7 @@ function StatusCards({ images }: { images: AtelierImages }) {
         detail={
           hasRefined
             ? "Catalogue version stored"
-            : "Refine on-device or upload your own"
+            : "Generated automatically after upload"
         }
         done={hasRefined}
       />
@@ -310,29 +309,6 @@ export function AtelierStudio({
       toast.success(`Refined · pass ${next}`);
     } catch (error) {
       toast.error("Refine failed", {
-        description: error instanceof Error ? error.message : undefined,
-      });
-    } finally {
-      setBusy(false);
-      setStage(null);
-    }
-  }
-
-  async function handleManualRefined(file: File) {
-    if (file.size > 15 * 1024 * 1024) {
-      toast.error("Photo must be under 15MB");
-      return;
-    }
-    setBusy(true);
-    setStage("refining");
-    try {
-      onChange({ ...images, refinement_status: "refining" });
-      const result = await uploadRefinedManually(file, images);
-      onChange(result);
-      toast.success("Refined image uploaded");
-    } catch (error) {
-      onChange({ ...images, refinement_status: images.refined_image_url ? "refined" : "not_started" });
-      toast.error("Couldn't upload that refined image", {
         description: error instanceof Error ? error.message : undefined,
       });
     } finally {
@@ -464,19 +440,6 @@ export function AtelierStudio({
               <Undo2 className="mr-1.5 h-4 w-4" strokeWidth={1.5} />
               Use original
             </Button>
-            <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm transition-colors hover:bg-accent">
-              <UploadIcon className="h-4 w-4" strokeWidth={1.5} />
-              Upload refined image
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) void handleManualRefined(file);
-                }}
-              />
-            </label>
             <Button
               type="button"
               variant="outline"
@@ -509,7 +472,8 @@ export function AtelierStudio({
           </div>
 
           <p className="mt-3 text-xs text-muted-foreground">
-            Refinement runs on-device today — the AI relight pass plugs into this same pipeline.
+            Refinement is fully automatic — every pass runs on-device today, and the AI relight
+            stage drops into the same slot without changing this flow.
           </p>
         </>
       ) : null}
