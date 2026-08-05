@@ -27,6 +27,7 @@ export type AtelierImages = {
   image_processing_status: ProcessingStatus;
   image_processing_stage: ProcessingStage | null;
   image_processed_at: string | null;
+  refinement_status: RefinementStatus;
 };
 
 export function emptyAtelier(): AtelierImages {
@@ -38,6 +39,7 @@ export function emptyAtelier(): AtelierImages {
     image_processing_status: "idle",
     image_processing_stage: null,
     image_processed_at: null,
+    refinement_status: "not_started",
   };
 }
 
