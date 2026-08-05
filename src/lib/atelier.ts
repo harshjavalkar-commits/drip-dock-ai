@@ -337,3 +337,57 @@ export async function refineAgain(
     image_processed_at: new Date().toISOString(),
   };
 }
+
+/* ------------------------------------------------------------------ */
+/* Refinement workflow (manual today, AI-ready)                        */
+/* ------------------------------------------------------------------ */
+
+export const REFINEMENT_STATUSES = [
+  "not_started",
+  "refining",
+  "refined",
+  "approved",
+] as const;
+export type RefinementStatus = (typeof REFINEMENT_STATUSES)[number];
+
+export const REFINEMENT_LABELS: Record<RefinementStatus, string> = {
+  not_started: "Not started",
+  refining: "Refining",
+  refined: "Refined",
+  approved: "Approved",
+};
+
+/** The image the wardrobe should show: refined first, then whatever exists. */
+export function primaryImagePath(images: {
+  image_url?: string | null;
+  refined_image_url?: string | null;
+  original_image_url?: string | null;
+}): string | null {
+  return images.refined_image_url ?? images.image_url ?? images.original_image_url ?? null;
+}
+
+/**
+ * Manual refinement upload — the user brings their own retouched file.
+ * Stored beside the original so the AI pass can later write to the same slot.
+ */
+export async function uploadRefinedManually(
+  file: File,
+  images: AtelierImages,
+): Promise<AtelierImages> {
+  const base = images.original_image_url ?? images.extracted_image_url;
+  if (!base) throw new Error("Upload an original photo first");
+  const folder = base.replace(/\/[^/]+$/, "");
+  const ext = file.type === "image/png" ? "png" : "jpg";
+  const path = `${folder}/refined-manual-${Date.now()}.${ext}`;
+  await upload(path, file, file.type || "image/jpeg");
+
+  return {
+    ...images,
+    refined_image_url: path,
+    image_url: path,
+    refinement_status: "refined",
+    image_processing_status: "ready",
+    image_processing_stage: "complete",
+    image_processed_at: new Date().toISOString(),
+  };
+}
