@@ -71,6 +71,7 @@ export function toFormValues(item: ClothingItem): ItemFormValues {
     image_processing_status: item.image_processing_status ?? "idle",
     image_processing_stage: item.image_processing_stage ?? null,
     image_processed_at: item.image_processed_at ?? null,
+    refinement_status: item.refinement_status ?? (item.refined_image_url ? "refined" : "not_started"),
     category: item.category,
     brand: item.brand ?? "",
     color: item.color ?? "",
@@ -97,6 +98,7 @@ export function toPayload(values: ItemFormValues, userId: string) {
     image_processing_status: values.image_processing_status,
     image_processing_stage: values.image_processing_stage,
     image_processed_at: values.image_processed_at,
+    refinement_status: values.refinement_status,
     category: values.category,
     brand: values.brand.trim() || null,
     color: values.color || null,
@@ -218,6 +220,7 @@ export function ItemForm({
           image_processing_status: values.image_processing_status,
           image_processing_stage: values.image_processing_stage,
           image_processed_at: values.image_processed_at,
+    refinement_status: values.refinement_status,
         }}
         onChange={(next) => onChange({ ...values, ...next })}
         userId={userId}

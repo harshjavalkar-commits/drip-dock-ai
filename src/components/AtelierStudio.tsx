@@ -7,11 +7,14 @@ import { cn } from "@/lib/utils";
 import {
   PROCESSING_STAGES,
   STAGE_LABELS,
+  REFINEMENT_LABELS,
   emptyAtelier,
   refineAgain,
+  uploadRefinedManually,
   runAtelierPipeline,
   type AtelierImages,
   type ProcessingStage,
+  type RefinementStatus,
 } from "@/lib/atelier";
 
 function Frame({
@@ -177,6 +180,81 @@ function StageRail({ stage }: { stage: ProcessingStage | null }) {
   );
 }
 
+
+function StatusCard({
+  label,
+  state,
+  detail,
+  done,
+}: {
+  label: string;
+  state: string;
+  detail: string;
+  done: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "rounded-2xl border p-4 transition-all duration-500",
+        done
+          ? "border-walnut/40 bg-walnut/5 shadow-[var(--shadow-soft)]"
+          : "border-dashed border-border bg-muted/40",
+      )}
+    >
+      <div className="flex items-center justify-between gap-2">
+        <span className="eyebrow">{label}</span>
+        <span
+          className={cn(
+            "grid h-5 w-5 place-items-center rounded-full border",
+            done ? "border-walnut bg-walnut text-walnut-foreground" : "border-border",
+          )}
+        >
+          {done ? <Check className="h-3 w-3" strokeWidth={2.5} /> : null}
+        </span>
+      </div>
+      <p className="mt-2 text-sm font-medium">{state}</p>
+      <p className="mt-0.5 text-xs text-muted-foreground">{detail}</p>
+    </div>
+  );
+}
+
+function StatusCards({ images }: { images: AtelierImages }) {
+  const status: RefinementStatus = images.refinement_status ?? "not_started";
+  const hasOriginal = Boolean(images.original_image_url);
+  const hasRefined = Boolean(images.refined_image_url);
+  const approved = status === "approved";
+  return (
+    <div className="mt-5 grid gap-3 sm:grid-cols-3">
+      <StatusCard
+        label="Original"
+        state={hasOriginal ? "Saved" : "Awaiting photo"}
+        detail={hasOriginal ? "Upright, full resolution" : "Upload a garment photo"}
+        done={hasOriginal}
+      />
+      <StatusCard
+        label="Refined"
+        state={REFINEMENT_LABELS[status]}
+        detail={
+          hasRefined
+            ? "Catalogue version stored"
+            : "Refine on-device or upload your own"
+        }
+        done={hasRefined}
+      />
+      <StatusCard
+        label="Archive ready"
+        state={approved ? "Approved" : "Pending approval"}
+        detail={
+          approved
+            ? "Locked in as the wardrobe image"
+            : "Approve once the finish looks right"
+        }
+        done={approved}
+      />
+    </div>
+  );
+}
+
 export function AtelierStudio({
   images,
   onChange,
@@ -240,6 +318,29 @@ export function AtelierStudio({
     }
   }
 
+  async function handleManualRefined(file: File) {
+    if (file.size > 15 * 1024 * 1024) {
+      toast.error("Photo must be under 15MB");
+      return;
+    }
+    setBusy(true);
+    setStage("refining");
+    try {
+      onChange({ ...images, refinement_status: "refining" });
+      const result = await uploadRefinedManually(file, images);
+      onChange(result);
+      toast.success("Refined image uploaded");
+    } catch (error) {
+      onChange({ ...images, refinement_status: images.refined_image_url ? "refined" : "not_started" });
+      toast.error("Couldn't upload that refined image", {
+        description: error instanceof Error ? error.message : undefined,
+      });
+    } finally {
+      setBusy(false);
+      setStage(null);
+    }
+  }
+
   const hasPhoto = Boolean(images.original_image_url);
   const usingRefined = images.image_url === images.refined_image_url && !!images.refined_image_url;
 
@@ -295,7 +396,12 @@ export function AtelierStudio({
 
       {hasPhoto && !processing ? (
         <>
-          <div className="mt-5 grid grid-cols-3 gap-3 sm:gap-4">
+          <StatusCards images={images} />
+
+          <p className="mt-6 text-xs text-muted-foreground">
+            Pick the primary wardrobe image — the Dock always prefers the refined frame.
+          </p>
+          <div className="mt-3 grid grid-cols-3 gap-3 sm:gap-4">
             <Frame
               path={images.original_image_url}
               label="Original"
@@ -351,11 +457,41 @@ export function AtelierStudio({
                   ...images,
                   image_url: images.original_image_url,
                   image_processing_status: "skipped",
+                  refinement_status: "not_started",
                 })
               }
             >
               <Undo2 className="mr-1.5 h-4 w-4" strokeWidth={1.5} />
               Use original
+            </Button>
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm transition-colors hover:bg-accent">
+              <UploadIcon className="h-4 w-4" strokeWidth={1.5} />
+              Upload refined image
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) void handleManualRefined(file);
+                }}
+              />
+            </label>
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-full bg-card"
+              disabled={!images.refined_image_url || images.refinement_status === "approved"}
+              onClick={() =>
+                onChange({
+                  ...images,
+                  refinement_status: "approved",
+                  image_url: images.refined_image_url ?? images.image_url,
+                })
+              }
+            >
+              <Check className="mr-1.5 h-4 w-4" strokeWidth={1.5} />
+              {images.refinement_status === "approved" ? "Approved" : "Approve for archive"}
             </Button>
             <label className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-border bg-card px-4 py-2 text-sm transition-colors hover:bg-accent">
               <Camera className="h-4 w-4" strokeWidth={1.5} />
