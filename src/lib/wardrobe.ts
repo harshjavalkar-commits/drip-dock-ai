@@ -1,4 +1,4 @@
-import type { ProcessingStage, ProcessingStatus } from "@/lib/atelier";
+import type { ProcessingStage, ProcessingStatus, RefinementStatus } from "@/lib/atelier";
 
 export const CATEGORIES = [
   "T-Shirts",
@@ -156,6 +156,7 @@ export type ClothingItem = {
   image_processing_status: ProcessingStatus | null;
   image_processing_stage: ProcessingStage | null;
   image_processed_at: string | null;
+  refinement_status: RefinementStatus | null;
   category: string;
   brand: string | null;
   color: string | null;

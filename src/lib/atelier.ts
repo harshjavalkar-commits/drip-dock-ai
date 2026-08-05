@@ -277,7 +277,11 @@ export async function runAtelierPipeline(
 ): Promise<AtelierImages> {
   const assetId = crypto.randomUUID();
   const folder = assetFolder(userId, assetId);
-  const images: AtelierImages = { ...emptyAtelier(), image_processing_status: "processing" };
+  const images: AtelierImages = {
+    ...emptyAtelier(),
+    image_processing_status: "processing",
+    refinement_status: "refining",
+  };
 
   const emit = (stage: ProcessingStage) => {
     images.image_processing_stage = stage;
@@ -306,6 +310,7 @@ export async function runAtelierPipeline(
   images.image_url = images.refined_image_url;
 
   images.image_processing_status = "ready";
+  images.refinement_status = "refined";
   images.image_processed_at = new Date().toISOString();
   emit("complete");
   return images;
@@ -337,6 +342,7 @@ export async function refineAgain(
     image_processing_status: "ready",
     image_processing_stage: "complete",
     image_processed_at: new Date().toISOString(),
+    refinement_status: "refined",
   };
 }
 

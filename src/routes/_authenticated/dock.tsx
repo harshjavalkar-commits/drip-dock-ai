@@ -3,6 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Heart, Plus, Search, SlidersHorizontal, X } from "lucide-react";
 import { toast } from "sonner";
+import { primaryImagePath } from "@/lib/atelier";
 import { supabase } from "@/lib/supabase";
 import { useItems } from "@/lib/queries";
 import { ItemImage } from "@/components/ItemImage";
@@ -262,7 +263,7 @@ function Dock() {
                         className="block overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-soft)] transition-all duration-500 hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)]"
                       >
                         <ItemImage
-                          path={item.image_url}
+                          path={primaryImagePath(item)}
                           alt={item.name}
                           className="aspect-[3/4.4] transition-transform duration-700 group-hover:scale-[1.03]"
                         />
