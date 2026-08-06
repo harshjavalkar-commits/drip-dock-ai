@@ -200,9 +200,28 @@
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
 }
 
+@utility float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+  will-change: transform;
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -10px;
+  }
+}
+
 @utility rise {
   animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+
 
 @keyframes rise {
   from {

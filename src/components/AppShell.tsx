@@ -17,7 +17,9 @@ import { cn } from "@/lib/utils";
 
 export const NAV = [
   { to: "/dock", label: "Dock", icon: LayoutGrid },
+  { to: "/miniyou", label: "MiniYou", icon: UserRound },
   { to: "/upload", label: "Upload", icon: Plus },
+
   { to: "/stylist", label: "Stylist", icon: Sparkles },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/wishlist", label: "Wishlist", icon: Heart },
