@@ -39,3 +39,13 @@ create trigger mini_you_updated
 -- this column only ever holds an optional MiniYou-ready layer render.
 alter table public.clothing_items
   add column if not exists mini_you_layer_url text;
+
+-- Guided creation flow: which MiniYou style the user picked.
+alter table public.mini_you_profiles
+  add column if not exists style text;
+
+alter table public.mini_you_profiles
+  drop constraint if exists mini_you_profiles_style_check;
+alter table public.mini_you_profiles
+  add constraint mini_you_profiles_style_check
+  check (style is null or style in ('minimal-3d', 'realistic-chibi'));

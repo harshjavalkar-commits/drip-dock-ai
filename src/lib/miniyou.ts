@@ -8,6 +8,55 @@ import {
 } from "@/lib/wardrobe";
 
 export type MiniYouStatus = "draft" | "ready";
+export type MiniYouStyle = "minimal-3d" | "realistic-chibi";
+
+export const MINI_YOU_STYLES: {
+  id: MiniYouStyle;
+  label: string;
+  tagline: string;
+  description: string;
+  promptStyle: string;
+}[] = [
+  {
+    id: "minimal-3d",
+    label: "Minimal 3D",
+    tagline: "Editorial, matte, quietly premium",
+    description:
+      "A clean, matte 3D figure with soft studio light — closest to the DripDock house look.",
+    promptStyle:
+      "a minimal 3D character render: smooth matte surfaces, soft neutral studio lighting, realistic body proportions, understated editorial styling, no exaggerated cartoon features",
+  },
+  {
+    id: "realistic-chibi",
+    label: "Realistic Chibi",
+    tagline: "Playful proportions, real face",
+    description:
+      "A collectible-figure look: slightly larger head, realistic facial likeness, toy-grade finish.",
+    promptStyle:
+      "a realistic chibi collectible figure: slightly enlarged head with an accurate, recognisable facial likeness, compact stylised body, fine toy-grade material detail, soft studio lighting",
+  },
+];
+
+/** The exact prompt the user pastes into ChatGPT alongside their selfie. */
+export function miniYouPrompt(style: MiniYouStyle, brief?: string | null): string {
+  const preset = MINI_YOU_STYLES.find((s) => s.id === style) ?? MINI_YOU_STYLES[0]!;
+  return [
+    `Using the attached selfie as the facial reference, create ${preset.promptStyle}.`,
+    "",
+    "Requirements:",
+    "- Full body, head to shoes, standing straight and facing the camera.",
+    "- Keep the person's face, hair, skin tone and body type clearly recognisable.",
+    "- Neutral plain ivory background, no props, no text, no watermark.",
+    "- Soft natural shadow under the feet, centred composition, vertical 3:4 framing.",
+    "- Simple neutral base outfit (plain tee, plain trousers, plain shoes) so garments can be layered later.",
+    "- Photorealistic render quality, high detail, no distortion of hands or limbs.",
+    brief?.trim() ? `- Personal notes: ${brief.trim()}` : "",
+    "",
+    "Output one image only.",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
 
 export type MiniYouProfile = {
   id: string;
@@ -15,10 +64,12 @@ export type MiniYouProfile = {
   image_url: string | null;
   /** Placeholder for the future AI-generated MiniYou prompt. */
   prompt: string | null;
+  style: MiniYouStyle | null;
   status: MiniYouStatus;
   created_at: string;
   updated_at: string;
 };
+
 
 /** The generated types file doesn't know about mini_you_profiles yet. */
 const table = () =>
@@ -48,7 +99,12 @@ export async function uploadMiniYouImage(userId: string, file: File): Promise<st
 
 export async function saveMiniYou(
   userId: string,
-  patch: { image_url?: string | null; prompt?: string | null; status?: MiniYouStatus },
+  patch: {
+    image_url?: string | null;
+    prompt?: string | null;
+    style?: MiniYouStyle | null;
+    status?: MiniYouStatus;
+  },
 ): Promise<MiniYouProfile> {
   const { data, error } = await table()
     .upsert(
