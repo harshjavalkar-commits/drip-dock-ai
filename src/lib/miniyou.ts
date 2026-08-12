@@ -39,7 +39,7 @@ export const MINI_YOU_STYLES: {
 
 /** The exact prompt the user pastes into ChatGPT alongside their selfie. */
 export function miniYouPrompt(style: MiniYouStyle, brief?: string | null): string {
-  const preset = MINI_YOU_STYLES.find((s) => s.id === style) ?? MINI_YOU_STYLES[0];
+  const preset = MINI_YOU_STYLES.find((s) => s.id === style) ?? MINI_YOU_STYLES[0]!;
   return [
     `Using the attached selfie as the facial reference, create ${preset.promptStyle}.`,
     "",
@@ -99,7 +99,12 @@ export async function uploadMiniYouImage(userId: string, file: File): Promise<st
 
 export async function saveMiniYou(
   userId: string,
-  patch: { image_url?: string | null; prompt?: string | null; status?: MiniYouStatus },
+  patch: {
+    image_url?: string | null;
+    prompt?: string | null;
+    style?: MiniYouStyle | null;
+    status?: MiniYouStatus;
+  },
 ): Promise<MiniYouProfile> {
   const { data, error } = await table()
     .upsert(
