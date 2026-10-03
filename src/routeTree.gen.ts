@@ -16,6 +16,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedCalendarRouteImport } from './routes/_authenticated/calendar'
 import { Route as AuthenticatedDockRouteImport } from './routes/_authenticated/dock'
+import { Route as AuthenticatedLooksRouteImport } from './routes/_authenticated/looks'
 import { Route as AuthenticatedMiniyouRouteImport } from './routes/_authenticated/miniyou'
 import { Route as AuthenticatedPackingRouteImport } from './routes/_authenticated/packing'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -56,6 +57,11 @@ const AuthenticatedCalendarRoute = AuthenticatedCalendarRouteImport.update({
 const AuthenticatedDockRoute = AuthenticatedDockRouteImport.update({
   id: '/dock',
   path: '/dock',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedLooksRoute = AuthenticatedLooksRouteImport.update({
+  id: '/looks',
+  path: '/looks',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedMiniyouRoute = AuthenticatedMiniyouRouteImport.update({
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dock': typeof AuthenticatedDockRoute
+  '/looks': typeof AuthenticatedLooksRoute
   '/miniyou': typeof AuthenticatedMiniyouRoute
   '/packing': typeof AuthenticatedPackingRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/calendar': typeof AuthenticatedCalendarRoute
   '/dock': typeof AuthenticatedDockRoute
+  '/looks': typeof AuthenticatedLooksRoute
   '/miniyou': typeof AuthenticatedMiniyouRoute
   '/packing': typeof AuthenticatedPackingRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
   '/_authenticated/calendar': typeof AuthenticatedCalendarRoute
   '/_authenticated/dock': typeof AuthenticatedDockRoute
+  '/_authenticated/looks': typeof AuthenticatedLooksRoute
   '/_authenticated/miniyou': typeof AuthenticatedMiniyouRoute
   '/_authenticated/packing': typeof AuthenticatedPackingRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/calendar'
     | '/dock'
+    | '/looks'
     | '/miniyou'
     | '/packing'
     | '/profile'
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/calendar'
     | '/dock'
+    | '/looks'
     | '/miniyou'
     | '/packing'
     | '/profile'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/_authenticated/analytics'
     | '/_authenticated/calendar'
     | '/_authenticated/dock'
+    | '/_authenticated/looks'
     | '/_authenticated/miniyou'
     | '/_authenticated/packing'
     | '/_authenticated/profile'
@@ -248,6 +260,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDockRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/looks': {
+      id: '/_authenticated/looks'
+      path: '/looks'
+      fullPath: '/looks'
+      preLoaderRoute: typeof AuthenticatedLooksRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/miniyou': {
       id: '/_authenticated/miniyou'
       path: '/miniyou'
@@ -304,6 +323,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedCalendarRoute: typeof AuthenticatedCalendarRoute
   AuthenticatedDockRoute: typeof AuthenticatedDockRoute
+  AuthenticatedLooksRoute: typeof AuthenticatedLooksRoute
   AuthenticatedMiniyouRoute: typeof AuthenticatedMiniyouRoute
   AuthenticatedPackingRoute: typeof AuthenticatedPackingRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
@@ -317,6 +337,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
   AuthenticatedCalendarRoute: AuthenticatedCalendarRoute,
   AuthenticatedDockRoute: AuthenticatedDockRoute,
+  AuthenticatedLooksRoute: AuthenticatedLooksRoute,
   AuthenticatedMiniyouRoute: AuthenticatedMiniyouRoute,
   AuthenticatedPackingRoute: AuthenticatedPackingRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
@@ -338,3 +359,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -1,19 +1,20 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, BarChart3, CalendarDays, Luggage, Sparkles } from "lucide-react";
+import { ArrowRight, Bookmark, ImagePlus, Share2, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "DripDock — AI wardrobe intelligence & personal stylist" },
+      { title: "DripDock — Your wardrobe. Your world." },
       {
         name: "description",
         content:
-          "DripDock turns the clothes you already own into outfits worth wearing. Catalogue your wardrobe, get AI styling, track cost per wear, plan outfits and pack smarter.",
+          "DripDock turns Your world. already own into outfits worth wearing. Collect your real clothes, create personal outfit cards and share your signature looks.",
       },
-      { property: "og:title", content: "DripDock — AI wardrobe intelligence & personal stylist" },
+      { property: "og:title", content: "DripDock — Your wardrobe. Your world." },
       {
         property: "og:description",
-        content: "DripDock turns the clothes you already own into outfits worth wearing. Catalogue your wardrobe, get AI styling, track cost per wear, plan outfits and pack smarter.",
+        content:
+          "DripDock turns Your world. already own into outfits worth wearing. Collect your real clothes, create personal outfit cards and share your signature looks.",
       },
     ],
   }),
@@ -22,24 +23,24 @@ export const Route = createFileRoute("/")({
 
 const FEATURES = [
   {
+    icon: ImagePlus,
+    title: "Collect your pieces",
+    body: "Bring photos or ready-made cutouts. Give each piece a name and start styling. Your original photo stays safe.",
+  },
+  {
     icon: Sparkles,
-    title: "Stylist",
-    body: "Outfits generated only from pieces you own, with a compatibility score and the reasoning behind every pairing.",
+    title: "Make a look",
+    body: "Pick your favourites, lock a piece, and shuffle the rest. A personal outfit board made from your actual wardrobe.",
   },
   {
-    icon: BarChart3,
-    title: "Analytics",
-    body: "Wardrobe value, cost per wear, unused purchases and the essentials still missing from your rotation.",
+    icon: Share2,
+    title: "Your own cover story",
+    body: "Give your look an editorial finish. Export a card, then share it wherever your friends are.",
   },
   {
-    icon: CalendarDays,
-    title: "Calendar",
-    body: "Plan what you'll wear before the week starts, and log wears automatically as the days pass.",
-  },
-  {
-    icon: Luggage,
-    title: "Packing",
-    body: "Destination, weather and trip length in — a precise checklist built from your own closet out.",
+    icon: Bookmark,
+    title: "Keep the good ones",
+    body: "Save your signature combinations and return to remix them. Your style, building one look at a time.",
   },
 ];
 
@@ -58,25 +59,25 @@ function Landing() {
 
       <section className="spotlight mx-auto max-w-6xl px-6 pb-20 pt-10 sm:pt-20">
         <div className="rise max-w-3xl">
-          <span className="eyebrow">Wardrobe intelligence</span>
+          <span className="eyebrow">Your personal fashion world</span>
           <h1 className="mt-5 text-5xl leading-[1.02] sm:text-7xl">
-            Dress better with
+            Your wardrobe.
             <br />
-            the clothes you
+            Your world.
             <br />
-            already own.
+            Worn your way.
           </h1>
           <p className="mt-7 max-w-lg text-base leading-relaxed text-muted-foreground">
-            DripDock is a quiet, considered home for your wardrobe. Catalogue every piece, then let
-            the stylist compose outfits, surface what you never wear, and tell you what's actually
-            missing.
+            Turn your real clothes into a personal fashion world. Collect your favourite pieces,
+            remix them into outfit cards, and give your everyday style a little main-character
+            energy.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Link
               to="/auth"
               className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm text-primary-foreground transition-opacity hover:opacity-90"
             >
-              Open your dock
+              Create your first look
               <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
             </Link>
             <Link
@@ -110,10 +111,9 @@ function Landing() {
         </div>
       </section>
 
-
       <footer className="border-t border-border">
         <div className="mx-auto max-w-6xl px-6 py-8 text-xs text-muted-foreground">
-          DripDock — personal wardrobe intelligence.
+          DripDock — Your wardrobe. Your world.
         </div>
       </footer>
     </div>

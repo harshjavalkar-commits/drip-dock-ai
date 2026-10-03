@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/hooks/useAuth";
 import { useItems } from "@/lib/queries";
-import { PageHeader } from "@/components/AppShell";
+import { NAV, PageHeader } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,7 +17,10 @@ export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({
     meta: [
       { title: "Profile — your DripDock account" },
-      { name: "description", content: "Manage your DripDock display name, style notes and session." },
+      {
+        name: "description",
+        content: "Manage your DripDock display name, style notes and session.",
+      },
       { property: "og:title", content: "Profile — DripDock" },
       { property: "og:description", content: "Your account and style preferences." },
     ],
@@ -98,6 +101,19 @@ function Profile() {
         }
       />
 
+      <nav aria-label="More wardrobe tools" className="mb-6 flex flex-wrap gap-2 lg:hidden">
+        {NAV.filter((item) =>
+          ["/stylist", "/analytics", "/wishlist", "/calendar", "/packing"].includes(item.to),
+        ).map((item) => (
+          <Link
+            key={item.to}
+            to={item.to}
+            className="rounded-full border bg-card px-4 py-3 text-sm"
+          >
+            {item.label}
+          </Link>
+        ))}
+      </nav>
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <section className="surface space-y-4 p-5 sm:p-6">
           <div className="space-y-1.5">

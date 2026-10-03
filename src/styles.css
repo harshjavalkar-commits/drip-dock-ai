@@ -222,7 +222,6 @@
   animation: rise 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-
 @keyframes rise {
   from {
     opacity: 0;
@@ -376,5 +375,83 @@
   }
   to {
     opacity: 0;
+  }
+}
+
+/* Capture and editorial styling: roomy targets, quiet chrome, tactile pieces. */
+.import-source {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 82px;
+  padding: 1.1rem;
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  background: var(--card);
+  text-align: left;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+.import-source:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+.import-source:disabled {
+  opacity: 0.6;
+  transform: none;
+}
+.import-source span {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.import-source small {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--muted-foreground);
+}
+.capture-hero {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.capture-mark {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+.capture-mark span {
+  font-family: var(--font-display);
+  font-size: 6rem;
+  line-height: 1;
+  opacity: 0.25;
+}
+.sticker-preview {
+  background-color: var(--card);
+  background-image: repeating-conic-gradient(var(--accent) 0% 25%, transparent 0% 50%);
+  background-size: 24px 24px;
+}
+.garment-sticker {
+  filter: drop-shadow(0 8px 7px rgb(35 28 20 / 0.14));
+}
+button:not(:disabled),
+a,
+label:has(input[type="file"]) {
+  -webkit-tap-highlight-color: transparent;
+}
+:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 4px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

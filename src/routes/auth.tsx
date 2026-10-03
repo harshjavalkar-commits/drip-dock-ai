@@ -38,10 +38,10 @@ function AuthPage() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate({ to: "/dock", replace: true });
+      if (data.session) navigate({ to: "/looks", replace: true });
     });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session) navigate({ to: "/dock", replace: true });
+      if (session) navigate({ to: "/looks", replace: true });
     });
     return () => sub.subscription.unsubscribe();
   }, [navigate]);
@@ -50,19 +50,28 @@ function AuthPage() {
     e.preventDefault();
     if (mode === "forgot") {
       const parsed = z.string().trim().email().safeParse(email);
-      if (!parsed.success) { toast.error("Enter a valid email"); return; }
+      if (!parsed.success) {
+        toast.error("Enter a valid email");
+        return;
+      }
       setBusy(true);
       const { error } = await supabase.auth.resetPasswordForEmail(parsed.data, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
       setBusy(false);
-      if (error) { toast.error(error.message); return; }
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
       setSent("reset");
       return;
     }
 
     const parsed = schema.safeParse({ email, password });
-    if (!parsed.success) { toast.error(parsed.error.issues[0]?.message ?? "Invalid details"); return; }
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0]?.message ?? "Invalid details");
+      return;
+    }
     setBusy(true);
     if (mode === "signup") {
       const { data, error } = await supabase.auth.signUp({
@@ -74,7 +83,10 @@ function AuthPage() {
         },
       });
       setBusy(false);
-      if (error) { toast.error(error.message); return; }
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
       if (!data.session) setSent("confirm");
     } else {
       const { error } = await supabase.auth.signInWithPassword({
@@ -82,10 +94,12 @@ function AuthPage() {
         password: parsed.data.password,
       });
       setBusy(false);
-      if (error) { toast.error(error.message); return; }
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
     }
   }
-
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -167,8 +181,6 @@ function AuthPage() {
               </Button>
             </form>
           )}
-
-
 
           <div className="mt-8 space-y-2 text-sm text-muted-foreground">
             {mode !== "signup" ? (

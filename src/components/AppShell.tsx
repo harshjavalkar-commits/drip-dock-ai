@@ -5,6 +5,7 @@ import {
   CalendarDays,
   Heart,
   LayoutGrid,
+  Layers3,
   Luggage,
   Plus,
   Sparkles,
@@ -16,9 +17,10 @@ import { supabase } from "@/lib/supabase";
 import { cn } from "@/lib/utils";
 
 export const NAV = [
+  { to: "/looks", label: "Looks", icon: Layers3 },
   { to: "/dock", label: "Dock", icon: LayoutGrid },
   { to: "/miniyou", label: "MiniYou", icon: UserRound },
-  { to: "/upload", label: "Upload", icon: Plus },
+  { to: "/upload", label: "Add", icon: Plus },
 
   { to: "/stylist", label: "Stylist", icon: Sparkles },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
@@ -42,9 +44,9 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="room min-h-screen">
       {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-border bg-sidebar px-4 py-6 lg:flex">
-        <Link to="/dock" className="px-3 pb-8">
+        <Link to="/looks" className="px-3 pb-8">
           <span className="display text-2xl">DripDock</span>
-          <span className="eyebrow mt-1 block">Wardrobe intelligence</span>
+          <span className="eyebrow mt-1 block">Your personal fashion world</span>
         </Link>
         <nav className="flex flex-1 flex-col gap-1">
           {NAV.map((item) => (
@@ -78,7 +80,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* Mobile top bar */}
       <header className="sticky top-0 z-30 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-b border-border bg-background/85 px-5 py-3.5 backdrop-blur-xl lg:hidden">
-        <Link to="/dock" className="display truncate text-xl">
+        <Link to="/looks" className="display truncate text-xl">
           DripDock
         </Link>
         <Link
@@ -97,7 +99,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Mobile tab bar */}
       <nav className="safe-bottom fixed inset-x-0 bottom-0 z-30 border-t border-border bg-background/90 px-2 pt-2 backdrop-blur-xl lg:hidden">
         <ul className="flex items-stretch justify-between">
-          {NAV.map((item) => (
+          {NAV.filter((item) =>
+            ["/looks", "/dock", "/upload", "/miniyou", "/profile"].includes(item.to),
+          ).map((item) => (
             <li key={item.to} className="min-w-0 flex-1">
               <Link
                 to={item.to}

@@ -50,7 +50,7 @@ export function emptyAtelier(): AtelierImages {
 const MAX_EDGE = 1600;
 
 /** Decodes a file and bakes in EXIF orientation (iPhone photos). */
-async function decodeUpright(file: Blob): Promise<HTMLCanvasElement> {
+export async function decodeUpright(file: Blob): Promise<HTMLCanvasElement> {
   const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
   const scale = Math.min(1, MAX_EDGE / Math.max(bitmap.width, bitmap.height));
   const canvas = document.createElement("canvas");
@@ -62,7 +62,7 @@ async function decodeUpright(file: Blob): Promise<HTMLCanvasElement> {
   return canvas;
 }
 
-function toBlob(canvas: HTMLCanvasElement, type: string, quality?: number): Promise<Blob> {
+export function toBlob(canvas: HTMLCanvasElement, type: string, quality?: number): Promise<Blob> {
   return new Promise((resolve, reject) => {
     canvas.toBlob(
       (blob) => (blob ? resolve(blob) : reject(new Error("Could not encode image"))),
@@ -78,7 +78,7 @@ function toBlob(canvas: HTMLCanvasElement, type: string, quality?: number): Prom
  * backdrop colour, then crops to the garment's bounding box.
  * This is the pre-AI pipeline; the AI pass will replace this step later.
  */
-function extractGarment(source: HTMLCanvasElement): HTMLCanvasElement {
+export function extractGarment(source: HTMLCanvasElement): HTMLCanvasElement {
   const { width: w, height: h } = source;
   const ctx = source.getContext("2d")!;
   const image = ctx.getImageData(0, 0, w, h);
@@ -143,8 +143,7 @@ function extractGarment(source: HTMLCanvasElement): HTMLCanvasElement {
     for (let x = 1; x < w - 1; x++) {
       const idx = y * w + x;
       if (seen[idx]) continue;
-      const neighbours =
-        seen[idx - 1]! + seen[idx + 1]! + seen[idx - w]! + seen[idx + w]!;
+      const neighbours = seen[idx - 1]! + seen[idx + 1]! + seen[idx - w]! + seen[idx + w]!;
       if (neighbours) data[idx * 4 + 3] = 255 - neighbours * 45;
     }
   }
@@ -219,10 +218,7 @@ function refineGarment(cutout: HTMLCanvasElement, intensity = 1): HTMLCanvasElem
   ctx.fillRect(0, 0, SIZE_W, SIZE_H);
 
   const margin = 0.86 - 0.03 * (intensity - 1);
-  const scale = Math.min(
-    (SIZE_W * margin) / cutout.width,
-    (SIZE_H * margin) / cutout.height,
-  );
+  const scale = Math.min((SIZE_W * margin) / cutout.width, (SIZE_H * margin) / cutout.height);
   const dw = cutout.width * scale;
   const dh = cutout.height * scale;
   const dx = (SIZE_W - dw) / 2;
@@ -317,15 +313,10 @@ export async function runAtelierPipeline(
 }
 
 /** Re-runs only the refinement pass on the existing cut-out, harder each time. */
-export async function refineAgain(
-  images: AtelierImages,
-  pass: number,
-): Promise<AtelierImages> {
+export async function refineAgain(images: AtelierImages, pass: number): Promise<AtelierImages> {
   const source = images.extracted_image_url ?? images.original_image_url;
   if (!source) throw new Error("Nothing to refine yet");
-  const { data, error } = await supabase.storage
-    .from("wardrobe")
-    .download(source);
+  const { data, error } = await supabase.storage.from("wardrobe").download(source);
   if (error || !data) throw new Error(error?.message ?? "Could not load the cut-out");
 
   const canvas = await decodeUpright(data);
@@ -350,12 +341,7 @@ export async function refineAgain(
 /* Refinement workflow (manual today, AI-ready)                        */
 /* ------------------------------------------------------------------ */
 
-export const REFINEMENT_STATUSES = [
-  "not_started",
-  "refining",
-  "refined",
-  "approved",
-] as const;
+export const REFINEMENT_STATUSES = ["not_started", "refining", "refined", "approved"] as const;
 export type RefinementStatus = (typeof REFINEMENT_STATUSES)[number];
 
 export const REFINEMENT_LABELS: Record<RefinementStatus, string> = {
@@ -371,5 +357,5 @@ export function primaryImagePath(images: {
   refined_image_url?: string | null;
   original_image_url?: string | null;
 }): string | null {
-  return images.refined_image_url ?? images.image_url ?? images.original_image_url ?? null;
+  return images.image_url ?? images.original_image_url ?? images.refined_image_url ?? null;
 }
