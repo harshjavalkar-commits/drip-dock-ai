@@ -48,3 +48,13 @@ The browser suite intercepts every Supabase request and uses synthetic transpare
 ## Longer-term architecture
 
 Keep capture sources separate from processing: device/clipboard/Google → original → approved sticker → outfit. Add a processing adapter only after testing it against real dark fabrics, logos, fine straps, jewellery and worn clothing. Native Apple Vision is a future iOS adapter, not a browser dependency. A controlled MiniYou rendering experiment can consume the same originals and garment IDs without changing ingestion. No realistic try-on, cloth simulation or autonomous avatar generation is introduced here.
+
+## Real-backend verification — 2026-10-06
+
+The test account was exercised against live Supabase Auth, private Storage and database using three public product photographs (shirt, navy trousers, white sneakers). The frontend under test was the current local source; this does not certify that Lovable published the same revision.
+
+The live database lacked `refinement_status`; the existing `atelier_refinement.sql` migration was applied and the failed upload retested successfully. Checks covered batch upload, lift/undo, exact original-byte preservation, separate stickers, owner-scoped item reads, locked shuffle, outfit save/reload and 1080×1350 export. Replacement uploads and removal of earlier QA fixtures were also checked.
+
+Visual inspection found that the previous background threshold erased white fabric. The sticker editor now uses a conservative threshold of 8 instead of 46; this favors preserving garment details and can leave some background for the erase brush. This remains simple background lifting, not semantic garment segmentation. The earlier Atelier pipeline retains its existing threshold. A light-fabric regression is included in the browser suite.
+
+Native iPhone clipboard/share sheets, real Google consent and live Lovable deployment remain unverified. Test credentials and downloaded product imagery are not committed.

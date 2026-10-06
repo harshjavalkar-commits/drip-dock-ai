@@ -106,7 +106,8 @@ export function StickerEditor({
     if (!canvas.current) return;
     snapshot();
     const c = canvas.current;
-    const cut = extractGarment(c);
+    // Keep light fabrics intact; ambiguous edges can be cleaned with the erase brush.
+    const cut = extractGarment(c, 8);
     const ctx = c.getContext("2d")!;
     ctx.clearRect(0, 0, c.width, c.height);
     const scale = Math.min(c.width / cut.width, c.height / cut.height) * 0.9;

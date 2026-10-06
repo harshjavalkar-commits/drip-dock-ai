@@ -96,8 +96,12 @@ assert.equal(errors.length,0,errors.join('\n'));
 // Pure selection invariants through Vite's module loader.
 const invariants=await page.evaluate(async()=>{
  const {remixLook,toggleLookItem,lookLayout}=await import('/src/lib/lookbook.ts');
+ const {extractGarment}=await import('/src/lib/atelier.ts');
+ const c=document.createElement('canvas');c.width=c.height=100;const ctx=c.getContext('2d');
+ ctx.fillStyle='rgb(236,236,234)';ctx.fillRect(0,0,100,100);ctx.fillStyle='rgb(250,250,250)';ctx.fillRect(20,20,60,60);
+ const cut=extractGarment(c,8);const lightFabric=cut.getContext('2d').getImageData(Math.floor(cut.width/2),Math.floor(cut.height/2),1,1).data[3];
  const items=[{id:'top',category:'Shirts'},{id:'bottom',category:'Jeans'},{id:'shoe',category:'Shoes'}];
- return {remix:remixLook(items,['deleted','top','top'],()=>0),limit:toggleLookItem(['1','2','3','4','5','6'],'7').length,layout:lookLayout(6).length};
-});assert.deepEqual(invariants,{remix:['top','bottom','shoe'],limit:6,layout:6});
+ return {remix:remixLook(items,['deleted','top','top'],()=>0),limit:toggleLookItem(['1','2','3','4','5','6'],'7').length,layout:lookLayout(6).length,lightFabric};
+});assert.deepEqual(invariants,{remix:['top','bottom','shoe'],limit:6,layout:6,lightFabric:255});
 console.log('PASS: mobile layout, piece selection, locked shuffle, save persistence, PNG export, batch import, alpha preservation, undo, original separation, selection invariants.');
 await browser.close();

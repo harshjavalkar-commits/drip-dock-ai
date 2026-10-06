@@ -78,7 +78,7 @@ export function toBlob(canvas: HTMLCanvasElement, type: string, quality?: number
  * backdrop colour, then crops to the garment's bounding box.
  * This is the pre-AI pipeline; the AI pass will replace this step later.
  */
-export function extractGarment(source: HTMLCanvasElement): HTMLCanvasElement {
+export function extractGarment(source: HTMLCanvasElement, tolerance = 46): HTMLCanvasElement {
   const { width: w, height: h } = source;
   const ctx = source.getContext("2d")!;
   const image = ctx.getImageData(0, 0, w, h);
@@ -111,7 +111,7 @@ export function extractGarment(source: HTMLCanvasElement): HTMLCanvasElement {
   const br = sr / n;
   const bg = sg / n;
   const bb = sb / n;
-  const TOL = 46 * 46 * 3;
+  const TOL = tolerance * tolerance * 3;
 
   const seen = new Uint8Array(w * h);
   const stack: number[] = [];
